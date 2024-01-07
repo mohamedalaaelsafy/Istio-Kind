@@ -42,10 +42,10 @@ echo "Install nginx Ingress controller"
 kubectl apply --filename https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
 echo "-----------------------------------------------------------------------------"
 
-sleep 20
-
 #==> Add Nginx Ingress resource
 echo "Install nginx resource"
+echo "Waiting for Ingress controller to be ready..."
+kubectl -n ingress-nginx wait --for=condition=ready pod -l app.kubernetes.io/component=controller --timeout=10m
 kubectl apply -f network/ingress.yaml
 echo "-----------------------------------------------------------------------------"
 
@@ -124,6 +124,10 @@ echo "--------------------------------------------------------------------------
 echo "Remove Nginx Ingress controller"
 kubectl delete -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
 echo "-----------------------------------------------------------------------------"
+
+#==> Remove Kind Cluster
+echo "Remove Kind Cluster"
+kind delete cluster --name istio
 }
 
 #%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%
