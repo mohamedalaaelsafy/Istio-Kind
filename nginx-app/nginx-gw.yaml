@@ -1,0 +1,60 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: nginx-app-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: nginx-destination-rule
+spec:
+  host: nginx-svc
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+    trafficPolicy:
+      loadBalancer:
+        simple: ROUND_ROBIN
+  - name: v2
+    labels:
+      version: v2
+    trafficPolicy:
+      loadBalancer:
+        simple: ROUND_ROBIN
+---
+apiVersion:  networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: nginx-vs
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - nginx-app-gateway 
+  http:
+  - match:
+    - uri:
+        prefix: /app
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: nginx-svc
+        subset: v1
+      weight: 75
+    - destination:
+        host: nginx-svc
+        subset: v2
+      weight: 25
+---

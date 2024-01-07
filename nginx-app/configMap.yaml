@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-cm
+data:
+  v1: |
+    <h1>NGINX APP VERSION 1</h1>
+  v2: |
+    <h1>NGINX APP VERSION 2</h1>

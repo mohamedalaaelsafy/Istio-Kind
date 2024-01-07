@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-v1
+  labels:
+    app: nginx
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: nginx
+        version: v1
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        volumeMounts:
+          - name: v1
+            mountPath: /usr/share/nginx/html/index.html
+            subPath: v1
+      volumes:
+        - name: v1
+          configMap:
+            name: nginx-cm
+            defaultMode: 0777 
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-v2
+  labels:
+    app: nginx
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: nginx
+        version: v2
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        volumeMounts:
+          - name: v2
+            mountPath: /usr/share/nginx/html/index.html
+            subPath: v2
+      volumes:
+        - name: v2
+          configMap:
+            name: nginx-cm
+            defaultMode: 0777 
+
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

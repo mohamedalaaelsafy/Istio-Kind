@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-app
+  namespace: istio-system
+  # namespace: default
+  # annotations:
+    # nginx.ingress.kubernetes.io/rewrite-target: /
+    # nginx.ingress.kubernetes.io/service-upstream: "true"
+    # nginx.ingress.kubernetes.io/upstream-vhost: nginx-svc.default.svc.cluster.local
+    # nginx.ingress.kubernetes.io/upstream-vhost: istio-ingressgateway.istio-system.svc.cluster.local
+    #nginx.ingress.kubernetes.io/upstream-vhost: my-gateway.istio-system.svc.cdefault
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          # service:
+          #   name: nginx-svc
+          #   port:
+          #    number: 80
+
+          service:
+            name: istio-ingressgateway
+            port:
+             number: 80
