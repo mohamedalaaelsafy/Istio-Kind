@@ -36,7 +36,7 @@ We will install the following
 
     ![Alt text](./images/nginx.png) ![Alt text](./images/productpage.png)
 ## Uninstall
-- To remove all the setup run the following
+- To uninstall the entire setup, run the following command:
     ```bash
     ./script.sh
     ```
