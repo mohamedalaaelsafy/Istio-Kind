@@ -1,7 +1,7 @@
 
 # Install Istio Service Mesh
 We will install the following
-- Kind to provission our kubernetes cluster
+- Kind to provision our kubernetes cluster
 - Istio using Istioctl with demo profile
 - Nginx Ingress controller
 - Bookinfo simple application
